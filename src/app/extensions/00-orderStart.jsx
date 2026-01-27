@@ -6,6 +6,21 @@ const OrderStart = ({ setOrder, setCanGoNext, setCurrentPage, runServerlessFunct
   const [view, setView] = useState('menu'); // 'menu', 'drafts', 'submitted'
   const [listData, setListData] = useState([]);
 
+  const handleOpenIframe = () => {
+    actions.openIframeModal(
+      {
+        uri: "https://vertical-integration-replit.replit.app",
+        height: 1000,
+        width: 1000,
+        title: "Vertical Integration",
+        flush: true,
+      },
+      () => {
+        console.log("Iframe modal closed");
+      }
+    );
+  };
+
   const handleNewOrder = () => {
     setOrder({
       items: [],
@@ -23,8 +38,18 @@ const OrderStart = ({ setOrder, setCanGoNext, setCurrentPage, runServerlessFunct
     try {
       const action = type === 'drafts' ? 'getDraftOrders' : 'getSubmittedOrders';
       const result = await runServerlessFunction({ name: 'viProxy', parameters: { action } });
-      if (result.response.ok) {
-        setListData(result.response.data.items);
+      // Handle different response structures
+      const isOk = result?.response?.body?.ok || 
+                   result?.response?.statusCode === 200 || 
+                   result?.body?.ok || 
+                   result?.statusCode === 200;
+      if (isOk) {
+        const items = result?.response?.body?.data?.items || 
+                     result?.response?.data?.items || 
+                     result?.body?.data?.items || 
+                     result?.data?.items || 
+                     [];
+        setListData(items);
         setView(type);
       } else {
         actions.addAlert({ title: "Error", message: "Failed to load list", variant: "danger" });
@@ -40,8 +65,17 @@ const OrderStart = ({ setOrder, setCanGoNext, setCurrentPage, runServerlessFunct
     setLoading(true);
     try {
       const result = await runServerlessFunction({ name: 'viProxy', parameters: { action: 'getOrder', payload: { id } } });
-      if (result.response.ok) {
-        setOrder(result.response.data);
+      // Handle different response structures
+      const isOk = result?.response?.body?.ok || 
+                   result?.response?.statusCode === 200 || 
+                   result?.body?.ok || 
+                   result?.statusCode === 200;
+      if (isOk) {
+        const orderData = result?.response?.body?.data || 
+                         result?.response?.data || 
+                         result?.body?.data || 
+                         result?.data;
+        setOrder(orderData);
         if (isSubmitted) {
            // View only mode or similar? For now just load it.
            // Maybe jump to Review or success? 
@@ -53,6 +87,8 @@ const OrderStart = ({ setOrder, setCanGoNext, setCurrentPage, runServerlessFunct
            setCurrentPage(1);
         }
       }
+    } catch(e) {
+      actions.addAlert({ title: "Error", message: e.message || "Failed to load order", variant: "danger" });
     } finally {
       setLoading(false);
     }
@@ -97,14 +133,9 @@ const OrderStart = ({ setOrder, setCanGoNext, setCurrentPage, runServerlessFunct
       
       <Tile padding="medium">
         <Flex direction="column" gap="medium">
-          <Button onClick={handleNewOrder} variant="primary" width="100%">
-            Start New Order
-          </Button>
-          <Button onClick={() => loadList('drafts')} variant="secondary" width="100%">
-            Load Draft Order
-          </Button>
-          <Button onClick={() => loadList('submitted')} variant="secondary" width="100%">
-            View Submitted Order
+          
+          <Button onClick={handleOpenIframe} variant="primary" width="100%">
+            Open Iframe Modal
           </Button>
         </Flex>
       </Tile>

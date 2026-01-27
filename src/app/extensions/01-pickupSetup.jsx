@@ -21,9 +21,18 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
       setLoadingTickets(true);
       try {
         const res = await runServerlessFunction({ name: 'viProxy', parameters: { action: 'getAssociatedTickets' } });
-        if (res.response.body.ok) {
-          setTickets(res.response.body.data.items);
+        // Handle different response structures
+        const isOk = res?.response?.body?.ok || res?.response?.statusCode === 200 || res?.body?.ok;
+        if (isOk) {
+          const items = res?.response?.body?.data?.items || 
+                       res?.response?.data?.items || 
+                       res?.body?.data?.items || 
+                       res?.data?.items || 
+                       [];
+          setTickets(items);
         }
+      } catch (error) {
+        console.error("Failed to fetch tickets:", error);
       } finally {
         setLoadingTickets(false);
       }

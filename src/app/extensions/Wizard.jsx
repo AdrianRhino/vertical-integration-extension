@@ -45,7 +45,12 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
                 name: 'viProxy',
                 parameters: { action: 'saveDraft', payload: order }
             });
-            if (res.response?.body?.ok || res.response?.statusCode === 200) {
+            // Handle different response structures
+            const isOk = res?.response?.body?.ok || 
+                        res?.response?.statusCode === 200 || 
+                        res?.body?.ok || 
+                        res?.statusCode === 200;
+            if (isOk) {
                 setLastSaved(new Date());
             }
         } catch(e) {
@@ -100,13 +105,26 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
                 parameters: { action: 'getPricing', payload: { items: order.items } }
             });
 
-            if (!priceRes.response?.body?.ok && priceRes.response?.statusCode !== 200) {
+            // Handle different response structures
+            const priceIsOk = priceRes?.response?.body?.ok || 
+                             priceRes?.response?.statusCode === 200 || 
+                             priceRes?.body?.ok || 
+                             priceRes?.statusCode === 200;
+            
+            if (!priceIsOk) {
                 throw new Error("Pricing update failed. Cannot submit.");
             }
 
-            // Update state with fresh prices
-            const freshItems = priceRes.response?.body?.data?.items || priceRes.response?.data?.items;
-            const freshTotals = priceRes.response?.body?.data?.totals || priceRes.response?.data?.totals;
+            // Update state with fresh prices - try multiple response paths
+            const freshItems = priceRes?.response?.body?.data?.items || 
+                              priceRes?.response?.data?.items || 
+                              priceRes?.body?.data?.items || 
+                              priceRes?.data?.items || 
+                              [];
+            const freshTotals = priceRes?.response?.body?.data?.totals || 
+                               priceRes?.response?.data?.totals || 
+                               priceRes?.body?.data?.totals || 
+                               priceRes?.data?.totals;
             setOrder(prev => ({ ...prev, items: freshItems, totals: freshTotals }));
             
             // Re-check just in case
@@ -125,12 +143,25 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
           }
         });
 
-        if (response.response?.body?.ok || response.response?.statusCode === 200) {
-          const confirmation = response.response?.body?.data || response.response?.data;
+        // Handle different response structures
+        const submitIsOk = response?.response?.body?.ok || 
+                          response?.response?.statusCode === 200 || 
+                          response?.body?.ok || 
+                          response?.statusCode === 200;
+        
+        if (submitIsOk) {
+          const confirmation = response?.response?.body?.data || 
+                              response?.response?.data || 
+                              response?.body?.data || 
+                              response?.data;
           setOrder(prev => ({ ...prev, confirmation }));
           setCurrentPage(5); // Go to success
         } else {
-          const errorMsg = response.response?.body?.error?.message || response.response?.error?.message || "Submission failed";
+          const errorMsg = response?.response?.body?.error?.message || 
+                          response?.response?.error?.message || 
+                          response?.body?.error?.message || 
+                          response?.error?.message || 
+                          "Submission failed";
           actions.addAlert({ title: "Submission Failed", message: errorMsg, variant: "danger" });
         }
       } catch (e) {
