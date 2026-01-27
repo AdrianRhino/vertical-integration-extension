@@ -21,8 +21,8 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
       setLoadingTickets(true);
       try {
         const res = await runServerlessFunction({ name: 'viProxy', parameters: { action: 'getAssociatedTickets' } });
-        if (res.response.ok) {
-          setTickets(res.response.data.items);
+        if (res.response.body.ok) {
+          setTickets(res.response.body.data.items);
         }
       } finally {
         setLoadingTickets(false);

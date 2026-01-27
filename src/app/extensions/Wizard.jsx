@@ -8,13 +8,13 @@ import ReviewSubmit from "./04-reviewSubmit";
 import SuccessPage from "./05-successPage";
 
 // Define the steps for the indicator
-const STEPS = [
-  { title: "Start" },
-  { title: "Pickup" },
-  { title: "Pricing" },
-  { title: "Delivery" },
-  { title: "Review" },
-  { title: "Done" }
+const STEP_NAMES = [
+  "Start",
+  "Pickup",
+  "Pricing",
+  "Delivery",
+  "Review",
+  "Done"
 ];
 
 export const Wizard = ({ context, runServerlessFunction, actions }) => {
@@ -45,7 +45,7 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
                 name: 'viProxy',
                 parameters: { action: 'saveDraft', payload: order }
             });
-            if (res.response.ok) {
+            if (res.response?.body?.ok || res.response?.statusCode === 200) {
                 setLastSaved(new Date());
             }
         } catch(e) {
@@ -100,13 +100,13 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
                 parameters: { action: 'getPricing', payload: { items: order.items } }
             });
 
-            if (!priceRes.response.ok) {
+            if (!priceRes.response?.body?.ok && priceRes.response?.statusCode !== 200) {
                 throw new Error("Pricing update failed. Cannot submit.");
             }
 
             // Update state with fresh prices
-            const freshItems = priceRes.response.data.items;
-            const freshTotals = priceRes.response.data.totals;
+            const freshItems = priceRes.response?.body?.data?.items || priceRes.response?.data?.items;
+            const freshTotals = priceRes.response?.body?.data?.totals || priceRes.response?.data?.totals;
             setOrder(prev => ({ ...prev, items: freshItems, totals: freshTotals }));
             
             // Re-check just in case
@@ -125,11 +125,13 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
           }
         });
 
-        if (response.response.ok) {
-          setOrder(prev => ({ ...prev, confirmation: response.response.data }));
+        if (response.response?.body?.ok || response.response?.statusCode === 200) {
+          const confirmation = response.response?.body?.data || response.response?.data;
+          setOrder(prev => ({ ...prev, confirmation }));
           setCurrentPage(5); // Go to success
         } else {
-          actions.addAlert({ title: "Submission Failed", message: response.response.error.message, variant: "danger" });
+          const errorMsg = response.response?.body?.error?.message || response.response?.error?.message || "Submission failed";
+          actions.addAlert({ title: "Submission Failed", message: errorMsg, variant: "danger" });
         }
       } catch (e) {
         actions.addAlert({ title: "Error", message: e.message || "Submission error", variant: "danger" });
@@ -160,7 +162,7 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
   return (
     <Box direction="column" gap="medium">
       <Box direction="row" justify="between" align="center">
-         <StepIndicator currentStep={currentPage} steps={STEPS} />
+         <StepIndicator currentStep={currentPage} stepNames={STEP_NAMES} />
          {/* Autosave Indicator */}
          {lastSaved && (
              <Text variant="micro" format="italic">

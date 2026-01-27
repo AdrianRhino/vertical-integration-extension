@@ -1,6 +1,6 @@
 // viProxy.js - Single entry point for supplier interactions
 const axios = require('axios');
-const suppliersConfig = require('../extensions/config/suppliers.json');
+const suppliersConfig = require('../extensions/config/suppliers.js');
 
 // Simple settings storage (in HubSpot, use HubDB or CRM custom objects)
 let settings = {
@@ -9,11 +9,16 @@ let settings = {
   BEACON: { getPricing: 'sandbox', submitOrder: 'sandbox' },
 };
 
-exports.main = async (context, sendResponse) => {
-  const { supplierKey, action, payload } = context.parameters;
+exports.main = async (context = {}) => {
+  const { supplierKey, action, payload } = context.parameters || {};
 
   try {
-    if (!action) throw new Error('Missing action');
+    if (!action) {
+      return {
+        statusCode: 400,
+        body: { ok: false, error: { message: 'Missing action', code: 'MISSING_ACTION' } }
+      };
+    }
 
     // Load supplier config if needed
     let supplier = supplierKey ? suppliersConfig.suppliers.find(s => s.key === supplierKey) : null;
@@ -56,14 +61,20 @@ exports.main = async (context, sendResponse) => {
         throw new Error(`Unknown action: ${action}`);
     }
 
-    sendResponse({ ok: true, data: responseData });
+    return {
+      statusCode: 200,
+      body: { ok: true, data: responseData }
+    };
 
   } catch (error) {
     console.error('Error:', error);
-    sendResponse({
-      ok: false,
-      error: { message: error.message, code: error.code || 'ERROR' }
-    });
+    return {
+      statusCode: 500,
+      body: {
+        ok: false,
+        error: { message: error.message, code: error.code || 'ERROR' }
+      }
+    };
   }
 };
 
