@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Input, Box, Heading, Text, Panel, PanelBody, Select, Flex, Button } from "@hubspot/ui-extensions";
-import templates from "./config/templates.json";
-import suppliersConfig from "./config/suppliers.json";
+import templates from "./config/templates.js";
+import suppliersConfig from "./config/suppliers.js";
 
 const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) => {
   const [tickets, setTickets] = useState([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
+
+  // Safety check: ensure order exists
+  if (!order || !setOrder) {
+    return (
+      <Box>
+        <Text>Error: Missing required props</Text>
+      </Box>
+    );
+  }
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -23,6 +32,7 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
   }, []);
 
   const handleTemplateSelect = (templateId) => {
+    if (!templates?.templates || !order?.supplier) return;
     const template = templates.templates.find(t => t.id === templateId);
     if (template && order.supplier) {
       // Create new items from template
@@ -51,14 +61,14 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
 
   useEffect(() => {
     // Re-map items if supplier changes and we have a template
-    if (order.templateId && order.supplier) {
+    if (order?.templateId && order?.supplier) {
        handleTemplateSelect(order.templateId);
     }
-  }, [order.supplier]);
+  }, [order?.supplier]);
 
   useEffect(() => {
-    setCanGoNext(!!order.ticketId && !!order.supplier && !!order.templateId);
-  }, [order.ticketId, order.supplier, order.templateId, setCanGoNext]);
+    setCanGoNext(!!order?.ticketId && !!order?.supplier && !!order?.templateId);
+  }, [order?.ticketId, order?.supplier, order?.templateId, setCanGoNext]);
 
   return (
     <Box direction="column" gap="medium">
@@ -69,8 +79,8 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
            <Select
              label="Associated Ticket"
              placeholder={loadingTickets ? "Loading..." : "Select a ticket..."}
-             options={tickets.map(t => ({ label: `${t.subject} (${t.created})`, value: t.id }))}
-             value={order.ticketId}
+             options={tickets.map(t => ({ label: `${t.subject || 'Ticket'} (${t.created || 'N/A'})`, value: t.id }))}
+             value={order?.ticketId || null}
              onChange={(val) => setOrder(prev => ({ ...prev, ticketId: val }))}
            />
         </PanelBody>
@@ -79,10 +89,10 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
       <Panel title="2. Select Supplier">
         <PanelBody>
            <Flex gap="medium">
-             {suppliersConfig.suppliers.filter(s => s.enabled).map(s => (
+             {(suppliersConfig?.suppliers || []).filter(s => s.enabled).map(s => (
                <Button 
                  key={s.key}
-                 variant={order.supplier === s.key ? "primary" : "secondary"}
+                 variant={order?.supplier === s.key ? "primary" : "secondary"}
                  onClick={() => setOrder(prev => ({ ...prev, supplier: s.key }))}
                >
                  {s.name}
@@ -97,12 +107,12 @@ const PickupSetup = ({ order, setOrder, setCanGoNext, runServerlessFunction }) =
             <Select
               label="Order Template"
               placeholder="Choose a template to populate cart..."
-              options={templates.templates.map(t => ({ label: t.name, value: t.id }))}
-              value={order.templateId}
+              options={(templates?.templates || []).map(t => ({ label: t.name, value: t.id }))}
+              value={order?.templateId || null}
               onChange={handleTemplateSelect}
-              disabled={!order.supplier} // Must pick supplier first to know SKUs
+              disabled={!order?.supplier} // Must pick supplier first to know SKUs
             />
-            {!order.supplier && <Text variant="micro">Please select a supplier first.</Text>}
+            {!order?.supplier && <Text variant="micro">Please select a supplier first.</Text>}
          </PanelBody>
       </Panel>
     </Box>
