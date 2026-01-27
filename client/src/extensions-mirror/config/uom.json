@@ -1,0 +1,8 @@
+{
+  "units": [
+    { "code": "SQ", "name": "Square" },
+    { "code": "BDL", "name": "Bundle" },
+    { "code": "EA", "name": "Each" },
+    { "code": "BX", "name": "Box" }
+  ]
+}

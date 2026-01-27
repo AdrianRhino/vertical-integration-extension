@@ -1,0 +1,14 @@
+{
+  "ABC": {
+    "getPricing": "prod",
+    "submitOrder": "sandbox"
+  },
+  "SRS": {
+    "getPricing": "sandbox",
+    "submitOrder": "sandbox"
+  },
+  "BEACON": {
+    "getPricing": "sandbox",
+    "submitOrder": "sandbox"
+  }
+}

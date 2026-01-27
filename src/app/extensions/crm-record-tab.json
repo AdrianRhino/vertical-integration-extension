@@ -1,0 +1,17 @@
+{
+  "type": "crm-card",
+  "data": {
+    "title": "Vertical Integration Extension",
+    "description": "This is a simple vertical integration extension that allows users to view and order products from ABC Supply, SRS Distribution, and Beacon (QXO) Building Products. Using verison 2025.1",
+    "uid": "vertical_integration_card_extension",
+    "location": "crm.record.tab",
+    "module": {
+      "file": "index.jsx"
+    },
+    "objectTypes": [
+      {
+        "name": "deals"
+      }
+    ]
+  }
+}

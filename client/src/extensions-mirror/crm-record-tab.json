@@ -1,0 +1,10 @@
+{
+  "type": "crm.record.tab",
+  "file": "index.jsx",
+  "label": "Order Management",
+  "properties": [
+    "dealname",
+    "amount",
+    "dealstage"
+  ]
+}

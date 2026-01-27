@@ -1,0 +1,16 @@
+{
+  "name": "vertical-integration-extension",
+  "description": "CRM extension for order management with supplier integration",
+  "uid": "vertical_integration_extension",
+  "scopes": ["crm.objects.contacts.read", "crm.objects.contacts.write", "crm.objects.deals.read", "crm.objects.deals.write"],
+  "public": false,
+"extensions": {
+    "crm": {
+      "cards": [
+        {
+          "file": "extensions/crm-record-tab.json"
+        }
+      ]
+    }
+  }
+}

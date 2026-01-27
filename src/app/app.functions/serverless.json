@@ -1,0 +1,18 @@
+  {
+    "appFunctions": {
+      "viProxy": {
+        "file": "viProxy.js",
+        "secrets": [
+          "ABC_CLIENT_ID",
+          "ABC_CLIENT_SECRET",
+          "SRS_CLIENT_ID",
+          "SRS_CLIENT_SECRET",
+          "BEACON_USERNAME",
+          "BEACON_PASSWORD",
+          "BEACON_API_SITE_ID",
+          "SUPABASE_URL",
+          "SUPABASE_KEY"
+        ]
+      }
+    }
+  }

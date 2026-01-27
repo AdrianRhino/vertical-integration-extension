@@ -1,0 +1,11 @@
+{
+  "validation": {
+    "minOrderAmount": 100,
+    "maxOrderAmount": 50000,
+    "requiredFields": ["deliveryAddress", "contactPhone"]
+  },
+  "workflows": {
+    "autoApproveLimit": 1000,
+    "requiresManagerApproval": true
+  }
+}

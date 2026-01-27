@@ -1,0 +1,14 @@
+The error [ERROR] The project configuration file is missing required fields from the HubSpot CLI means that a necessary field or value is absent in one of your project's configuration files, likely hsproject.json, a *-hsmeta.json file, or potentially the global ~/.hscli/config.yml file. 
+Troubleshooting Steps
+Identify the Missing Field: The error message usually specifies which file and which field is missing. Review the full error output in your terminal for details.
+Verify Project Configuration Files: Check the relevant configuration file for the missing field.
+hsproject.json: This file must be at the root of your project directory and contains top-level project configuration.
+*-hsmeta.json files: These files configure specific project components (like CMS assets or app features) and are located within the src directory.
+hubspot.config.yml (deprecated) or ~/.hscli/config.yml (global config): This configuration file manages your HubSpot accounts and authentication details. A common issue here is a missing defaultPortal setting or missing variable values if you are using config profiles.
+Ensure all Variables have Values: If you are using config profiles (using the --profile or -p flag with hs project upload or hs project dev), you must ensure that every variable defined in your configuration files has a corresponding value in the specified profile.
+Use CLI Commands to Fix/Create Files:
+To create a new, correctly structured project configuration file, use the hs project create command.
+To manage or fix account authentication issues in your global config file, use the hs account auth or hs config migrate commands.
+You can list authenticated accounts using hs accounts to verify your setup.
+Check for Typos and Format: Ensure all fields match the required schema and are correctly formatted (e.g., property names in APIs often require their "external name" not their display label). 
+By checking the specific file mentioned in the error message and reviewing the required fields based on the HubSpot Developers documentation, you should be able to resolve the issue.
