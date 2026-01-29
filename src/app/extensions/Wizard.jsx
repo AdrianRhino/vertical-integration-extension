@@ -192,39 +192,10 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
 
   return (
     <Box direction="column" gap="medium">
-      <Box direction="row" justify="between" align="center">
-         <StepIndicator currentStep={currentPage} stepNames={STEP_NAMES} />
-         {/* Autosave Indicator */}
-         {lastSaved && (
-             <Text variant="micro" format="italic">
-                 {isSaving ? "Saving..." : `Draft Saved ${lastSaved.toLocaleTimeString()}`}
-             </Text>
-         )}
-      </Box>
-      
       <Box>
         {renderPage()}
       </Box>
-
-      {/* Navigation Buttons (Hidden on Success Page) */}
-      {currentPage < 5 && (
-        <Box direction="row" justify="between" gap="medium">
-          <Button 
-            onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
-            disabled={currentPage === 0 || submitting}
-            variant="secondary"
-          >
-            Back
-          </Button>
-          <Button 
-            onClick={handleNext}
-            disabled={!canGoNext || submitting}
-            variant="primary"
-          >
-            {currentPage === 4 ? (submitting ? "Confirming..." : "Confirm & Submit Order") : "Next"}
-          </Button>
-        </Box>
-      )}
+      <Text></Text>
     </Box>
   );
 };
