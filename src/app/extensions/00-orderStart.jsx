@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Button, Text, Box, Flex, Heading, Tile, Panel, PanelBody, Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from "@hubspot/ui-extensions";
+import { Button, Text, Box, Flex, Heading, Tile } from "@hubspot/ui-extensions";
 
-const OrderStart = ({ setOrder, setCanGoNext, setCurrentPage, runServerlessFunction, actions }) => {
+const OrderStart = ({ actions, context }) => {
 
   const handleOpenIframe = () => {
+    const dealId = context.crm.objectId;
+    const uri = "https://vertical-integration-replit.replit.app?dealId=" + dealId;
     actions.openIframeModal(
       {
-        uri: "https://vertical-integration-replit.replit.app",
+        uri: uri,
         height: 1000,
         width: 1000,
         title: "Vertical Integration",
