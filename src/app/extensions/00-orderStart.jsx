@@ -5,7 +5,7 @@ const OrderStart = ({ actions, context }) => {
 
   const handleOpenIframe = () => {
     const dealId = context.crm.objectId;
-    const uri = "https://vertical-integration-replit.replit.app?dealId=" + dealId;
+    const uri = "https://vertical-integration-replitzip-1.replit.app?dealId=" + dealId;
     actions.openIframeModal(
       {
         uri: uri,
