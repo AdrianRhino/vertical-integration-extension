@@ -3,10 +3,18 @@ import { Button, Text, Box, Flex, Heading, Tile } from "@hubspot/ui-extensions";
 
 const OrderStart = ({ actions, context, runServerless }) => {
 
- const printBeaconLog = () => {
-  const response = runServerless("beaconLogin");
-  console.log(response);
-};
+  const printBeaconLog = async () => {
+    try {
+      const response = await runServerless({
+        name: 'beaconLogin',
+        parameters: {},
+      });
+      const body = response?.response?.body ?? response?.body ?? response;
+      console.log('Beacon login result:', body);
+    } catch (err) {
+      console.error('Beacon login failed:', err);
+    }
+  };
 
   const handleOpenIframe = () => {
     const dealId = context.crm.objectId;
