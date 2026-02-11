@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Button, Text, Box, Flex, Heading, Tile } from "@hubspot/ui-extensions";
 
-const OrderStart = ({ actions, context }) => {
+const OrderStart = ({ actions, context, runServerless }) => {
 
-  const beaconLog = process.env.beaconUsername;
-  const beaconLog2 = process.env.beaconPass;
+ const printBeaconLog = () => {
+  const response = runServerless("beaconLogin");
+  console.log(response);
+};
 
   const handleOpenIframe = () => {
     const dealId = context.crm.objectId;
@@ -38,8 +40,9 @@ const OrderStart = ({ actions, context }) => {
           <Button onClick={handleOpenIframe} variant="primary" width="50%" alignSelf="center">
             Open Iframe Modal
           </Button>
-          <Text>{beaconLog}</Text>
-          <Text>{beaconLog2}</Text>
+          <Button onClick={printBeaconLog} variant="primary" width="50%" alignSelf="center">
+            Print Beacon Log
+          </Button>
         </Flex>
       </Tile>
     </Box>

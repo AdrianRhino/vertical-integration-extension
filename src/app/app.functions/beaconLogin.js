@@ -1,0 +1,10 @@
+exports.main = async (context = {}) => {
+
+    const beaconUsername = process.env.beaconUsername;
+    const beaconPass = process.env.beaconPass;
+
+    return {
+        beaconUsername: beaconUsername,
+        beaconPass: beaconPass
+    }
+}
