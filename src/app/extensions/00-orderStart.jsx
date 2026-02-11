@@ -3,6 +3,9 @@ import { Button, Text, Box, Flex, Heading, Tile } from "@hubspot/ui-extensions";
 
 const OrderStart = ({ actions, context }) => {
 
+  const beaconLog = process.env.beaconUsername;
+  const beaconLog2 = process.env.beaconPass;
+
   const handleOpenIframe = () => {
     const dealId = context.crm.objectId;
     const uri = "https://vertical-integration-replitzip-1.replit.app?dealId=" + dealId;
@@ -35,6 +38,8 @@ const OrderStart = ({ actions, context }) => {
           <Button onClick={handleOpenIframe} variant="primary" width="50%" alignSelf="center">
             Open Iframe Modal
           </Button>
+          <Text>{beaconLog}</Text>
+          <Text>{beaconLog2}</Text>
         </Flex>
       </Tile>
     </Box>
