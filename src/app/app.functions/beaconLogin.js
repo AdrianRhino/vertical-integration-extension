@@ -4,7 +4,9 @@ exports.main = async (context = {}) => {
     const beaconPass = process.env.beaconPass;
 
     return {
-        beaconUsername: beaconUsername,
-        beaconPass: beaconPass
+        body: {
+            beaconUsername: beaconUsername,
+            beaconPass: beaconPass
+        }
     }
 }
