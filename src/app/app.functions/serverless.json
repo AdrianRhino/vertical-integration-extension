@@ -13,13 +13,6 @@
           "SUPABASE_URL",
           "SUPABASE_KEY"
         ]
-      },
-      "beaconLogin": {
-        "file": "beaconLogin.js",
-        "secrets": [
-          "beaconUsername",
-          "beaconPass"
-        ]
       }
     }
   }
