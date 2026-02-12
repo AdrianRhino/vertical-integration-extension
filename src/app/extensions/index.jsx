@@ -4,10 +4,9 @@ import { Wizard } from "./Wizard";
 
 // Explicitly call hubspot.extend at the module level
 // This ensures HubSpot can detect the entry point
-hubspot.extend(({ context, runServerlessFunction, actions }) => (
+hubspot.extend(({ context, actions }) => (
   <Wizard 
     context={context} 
-    runServerlessFunction={runServerlessFunction} 
     actions={actions} 
   />
 ));

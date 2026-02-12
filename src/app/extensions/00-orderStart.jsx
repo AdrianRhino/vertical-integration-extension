@@ -1,24 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Text, Box, Flex, Heading, Tile } from "@hubspot/ui-extensions";
 
-const OrderStart = ({ actions, context, runServerless }) => {
-
-  const printBeaconLog = async () => {
-    try {
-      const response = await runServerless({
-        name: 'beaconLogin',
-        parameters: {},
-      });
-      const body = response?.response?.body ?? response?.body ?? response;
-      console.log('Beacon login result:', body);
-    } catch (err) {
-      console.error('Beacon login failed:', err);
-    }
-  };
+const OrderStart = ({ actions, context }) => {
 
   const handleOpenIframe = () => {
     const dealId = context.crm.objectId;
-    const uri = "https://vertical-integration-replitzip-1.replit.app?dealId=" + dealId;
+    const uri = "https://vertical-integration-replitzip-1.replit.app?dealId=" + dealId + "&userId=" + context.user.id;
     actions.openIframeModal(
       {
         uri: uri,
@@ -40,16 +27,12 @@ const OrderStart = ({ actions, context, runServerless }) => {
       <Text>Click the button below to begin:</Text>
       <Text></Text>
       </Flex>
-     
       
       <Tile padding="medium">
         <Flex direction="column" gap="medium" justify="center">
           
           <Button onClick={handleOpenIframe} variant="primary" width="50%" alignSelf="center">
             Open Iframe Modal
-          </Button>
-          <Button onClick={printBeaconLog} variant="primary" width="50%" alignSelf="center">
-            Print Beacon Log
           </Button>
         </Flex>
       </Tile>

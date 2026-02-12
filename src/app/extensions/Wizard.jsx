@@ -180,7 +180,7 @@ export const Wizard = ({ context, runServerlessFunction, actions }) => {
 
   const renderPage = () => {
     switch (currentPage) {
-      case 0: return <OrderStart context={context} actions={actions} runServerless={runServerlessFunction} />;
+      case 0: return <OrderStart context={context} actions={actions} />;
       case 1: return <PickupSetup {...commonProps} />;
       case 2: return <PricingTable {...commonProps} />;
       case 3: return <DeliveryForm {...commonProps} />;
